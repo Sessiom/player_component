@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://cd2ipxqmu254i"]
+[gd_scene load_steps=27 format=3 uid="uid://cd2ipxqmu254i"]
 
 [ext_resource type="Texture2D" uid="uid://dlw56h4q3trtn" path="res://assets/player/rectangle_player.png" id="1_4jvbj"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mx6mj"]
@@ -6,6 +6,9 @@
 [ext_resource type="Script" path="res://scripts/playerStateMachine.gd" id="4_hui71"]
 [ext_resource type="Script" path="res://scripts/idleState.gd" id="5_7qxxg"]
 [ext_resource type="Script" path="res://scripts/walkState.gd" id="6_87gbl"]
+[ext_resource type="Script" path="res://scripts/takesDamageState.gd" id="7_dj077"]
+[ext_resource type="Script" path="res://scripts/dealsDamageState.gd" id="8_x26bq"]
+[ext_resource type="Script" path="res://scripts/deathState.gd" id="9_n6fb0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u2lbm"]
 size = Vector2(26, 56)
@@ -623,12 +626,26 @@ tree_root = SubResource("AnimationNodeStateMachine_rkhhf")
 anim_player = NodePath("../AnimationPlayer")
 parameters/move/blend_position = Vector2(0, 0)
 
-[node name="playerStateMachine" type="Node" parent="." node_paths=PackedStringArray("current_state")]
+[node name="playerStateMachine" type="Node" parent="." node_paths=PackedStringArray("player", "current_state")]
 script = ExtResource("4_hui71")
+player = NodePath("..")
 current_state = NodePath("Idle")
 
-[node name="Idle" type="Node" parent="playerStateMachine"]
+[node name="Idle" type="Node" parent="playerStateMachine" node_paths=PackedStringArray("walk_state", "deals_damage_state", "takes_damage_state", "death_state")]
 script = ExtResource("5_7qxxg")
+walk_state = NodePath("../Walk")
+deals_damage_state = NodePath("../dealsDamage")
+takes_damage_state = NodePath("../takesDamage")
+death_state = NodePath("../death")
 
 [node name="Walk" type="Node" parent="playerStateMachine"]
 script = ExtResource("6_87gbl")
+
+[node name="takesDamage" type="Node" parent="playerStateMachine"]
+script = ExtResource("7_dj077")
+
+[node name="dealsDamage" type="Node" parent="playerStateMachine"]
+script = ExtResource("8_x26bq")
+
+[node name="death" type="Node" parent="playerStateMachine"]
+script = ExtResource("9_n6fb0")

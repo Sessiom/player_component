@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @export var speed : float = 200.0
+@export var health : float = 100.0
 
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var sprite : Sprite2D = $body
@@ -14,9 +15,12 @@ func _ready():
 	animation_tree.active = true
 
 func _physics_process(delta):
+	
+	#get_vector automatically normalizes vector
 	direction = Input.get_vector("left", "right", "up", "down")
 	
 	#control whether to move or not
+	#delta is automatically applied to velocity when move_and_slide() is called
 	if direction != Vector2.ZERO && state_machine.check_if_can_move():
 		velocity = direction * speed
 	else:

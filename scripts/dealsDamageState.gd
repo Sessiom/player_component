@@ -1,9 +1,9 @@
 extends State
 
-class_name walkState
+class_name dealsDamage
 
 @export var idle_state : State
-@export var deals_damage_state : State
+@export var walk_state : State
 @export var takes_damage_state : State
 @export var death_state : State
 
