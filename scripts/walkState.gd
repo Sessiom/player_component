@@ -9,3 +9,7 @@ class_name walkState
 
 func state_input(event : InputEvent):
 	pass
+	
+func state_process(delta):
+	if(player.velocity == Vector2.ZERO):
+		next_state = idle_state
