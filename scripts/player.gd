@@ -29,11 +29,11 @@ func _physics_process(delta):
 		#velocity.y = move_toward(velocity.y, 0, speed)
 		
 	
-	update_animation()
+	update_animation_parameters()
 	update_facing_direction()
 	move_and_slide()
 	
-func update_animation():
+func update_animation_parameters():
 	animation_tree.set("parameters/move/blend_position", direction)
 
 func update_facing_direction():
