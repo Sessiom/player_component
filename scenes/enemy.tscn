@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://dd48gmrwwor8q"]
+
+[ext_resource type="Texture2D" uid="uid://cgcv586llaf3w" path="res://assets/player/rectangle_player_angry.png" id="1_wbmv8"]
+[ext_resource type="Script" path="res://scripts/components/hitbox.gd" id="2_2boid"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1ikl1"]
+size = Vector2(26, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vh581"]
+size = Vector2(26, 56)
+
+[node name="Enemy" type="StaticBody2D"]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -28)
+texture = ExtResource("1_wbmv8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_1ikl1")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_mask = 0
+script = ExtResource("2_2boid")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_vh581")
+debug_color = Color(8.18223e-07, 0.642793, 0.311591, 0.42)

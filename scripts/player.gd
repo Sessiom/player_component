@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @export var speed : float = 200.0
 
+@onready var animation_player : AnimationPlayer = $AnimationPlayer
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var sprite : Sprite2D = $body
 @onready var state_machine : playerStateMachine = $playerStateMachine
@@ -40,3 +41,11 @@ func update_facing_direction():
 		sprite.flip_h = false
 	elif direction.x < 0:
 		sprite.flip_h = true
+
+
+func _on_health_health_changed(diff):
+	animation_player.play("take_damage")
+	
+
+func _on_health_health_depleted():
+	animation_player.play("death")

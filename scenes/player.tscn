@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://cd2ipxqmu254i"]
+[gd_scene load_steps=36 format=3 uid="uid://cd2ipxqmu254i"]
 
 [ext_resource type="Texture2D" uid="uid://dlw56h4q3trtn" path="res://assets/player/rectangle_player.png" id="1_4jvbj"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mx6mj"]
@@ -13,11 +13,10 @@
 [ext_resource type="Script" path="res://scripts/playerStateMachine/dealsDamageState.gd" id="8_x26bq"]
 [ext_resource type="Script" path="res://scripts/playerStateMachine/deathState.gd" id="9_n6fb0"]
 [ext_resource type="Script" path="res://scripts/playerStateMachine/state_debug_label.gd" id="10_dl1le"]
+[ext_resource type="Script" path="res://scripts/components/hurtbox.gd" id="14_nfvjc"]
+[ext_resource type="Script" path="res://scripts/health_debug_label.gd" id="15_bfrda"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u2lbm"]
-size = Vector2(26, 56)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_kmvjx"]
 size = Vector2(26, 56)
 
 [sub_resource type="Animation" id="Animation_xvuof"]
@@ -755,6 +754,9 @@ states/move/position = Vector2(373, 100)
 transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition_np56i")]
 graph_offset = Vector2(0, -83.0378)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jux0s"]
+size = Vector2(26, 57)
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_mx6mj")
 
@@ -764,13 +766,6 @@ script = ExtResource("2_0b5fo")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_u2lbm")
-
-[node name="HurtBox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(0, -30)
-shape = SubResource("RectangleShape2D_kmvjx")
-debug_color = Color(0.836177, 0.356666, 0.406287, 0.42)
 
 [node name="body" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -820,11 +815,19 @@ deals_damage_state = NodePath("../dealsDamage")
 takes_damage_state = NodePath("../takesDamage")
 death_state = NodePath("../Death")
 
-[node name="takesDamage" type="Node" parent="playerStateMachine"]
+[node name="takesDamage" type="Node" parent="playerStateMachine" node_paths=PackedStringArray("idle_state", "walk_state", "deals_damage_state", "death_state")]
 script = ExtResource("7_dj077")
+idle_state = NodePath("../Idle")
+walk_state = NodePath("../Walk")
+deals_damage_state = NodePath("../dealsDamage")
+death_state = NodePath("../Death")
 
-[node name="dealsDamage" type="Node" parent="playerStateMachine"]
+[node name="dealsDamage" type="Node" parent="playerStateMachine" node_paths=PackedStringArray("idle_state", "walk_state", "takes_damage_state", "death_state")]
 script = ExtResource("8_x26bq")
+idle_state = NodePath("../Idle")
+walk_state = NodePath("../Walk")
+takes_damage_state = NodePath("../takesDamage")
+death_state = NodePath("../Death")
 
 [node name="Death" type="Node" parent="playerStateMachine"]
 script = ExtResource("9_n6fb0")
@@ -837,3 +840,25 @@ offset_bottom = -63.0
 text = "State:"
 script = ExtResource("10_dl1le")
 state_machine = NodePath("../playerStateMachine")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health")]
+collision_layer = 0
+script = ExtResource("14_nfvjc")
+health = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -29.5)
+shape = SubResource("RectangleShape2D_jux0s")
+debug_color = Color(0.88939, 0.308858, 0.284008, 0.42)
+
+[node name="healthDebugLabel" type="Label" parent="." node_paths=PackedStringArray("health")]
+offset_left = -53.0
+offset_top = -1.0
+offset_right = 81.0
+offset_bottom = 22.0
+text = "Health:"
+script = ExtResource("15_bfrda")
+health = NodePath("../Health")
+
+[connection signal="health_changed" from="Health" to="." method="_on_health_health_changed"]
+[connection signal="health_depleted" from="Health" to="." method="_on_health_health_depleted"]

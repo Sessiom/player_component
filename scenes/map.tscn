@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://7xlsio5xjucq"]
+[gd_scene load_steps=6 format=4 uid="uid://7xlsio5xjucq"]
 
 [ext_resource type="Texture2D" uid="uid://bje8apwylcvm7" path="res://assets/tilemaps/dirt16.png" id="1_q2bib"]
 [ext_resource type="PackedScene" uid="uid://cd2ipxqmu254i" path="res://scenes/player.tscn" id="2_82ewv"]
+[ext_resource type="PackedScene" uid="uid://dd48gmrwwor8q" path="res://scenes/enemy.tscn" id="3_k2fet"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8gu5h"]
 texture = ExtResource("1_q2bib")
@@ -21,3 +22,6 @@ position = Vector2(107, 93)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(2, 2)
+
+[node name="Enemy" parent="." instance=ExtResource("3_k2fet")]
+position = Vector2(199, 94)
