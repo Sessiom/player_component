@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 @export var speed : float = 200.0
-@export var health : float = 100.0
 
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var sprite : Sprite2D = $body

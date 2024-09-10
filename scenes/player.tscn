@@ -1,17 +1,18 @@
-[gd_scene load_steps=38 format=3 uid="uid://cd2ipxqmu254i"]
+[gd_scene load_steps=34 format=3 uid="uid://cd2ipxqmu254i"]
 
 [ext_resource type="Texture2D" uid="uid://dlw56h4q3trtn" path="res://assets/player/rectangle_player.png" id="1_4jvbj"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mx6mj"]
+[ext_resource type="Script" path="res://scripts/components/health.gd" id="2_0b5fo"]
 [ext_resource type="Texture2D" uid="uid://bpa85dgtyai2h" path="res://assets/player/rectangle_arm.png" id="2_amdur"]
 [ext_resource type="Texture2D" uid="uid://bwjq1a7wqlphr" path="res://assets/player/rectangle_player_hit.png" id="2_wv0xw"]
-[ext_resource type="Script" path="res://scripts/playerStateMachine.gd" id="4_hui71"]
-[ext_resource type="Script" path="res://scripts/idleState.gd" id="5_7qxxg"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/playerStateMachine.gd" id="4_hui71"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/idleState.gd" id="5_7qxxg"]
 [ext_resource type="Texture2D" uid="uid://bka55qrimdl12" path="res://assets/player/rectangle_player_dead.png" id="5_tkus4"]
-[ext_resource type="Script" path="res://scripts/walkState.gd" id="6_87gbl"]
-[ext_resource type="Script" path="res://scripts/takesDamageState.gd" id="7_dj077"]
-[ext_resource type="Script" path="res://scripts/dealsDamageState.gd" id="8_x26bq"]
-[ext_resource type="Script" path="res://scripts/deathState.gd" id="9_n6fb0"]
-[ext_resource type="Script" path="res://scripts/state_debug_label.gd" id="10_dl1le"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/walkState.gd" id="6_87gbl"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/takesDamageState.gd" id="7_dj077"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/dealsDamageState.gd" id="8_x26bq"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/deathState.gd" id="9_n6fb0"]
+[ext_resource type="Script" path="res://scripts/playerStateMachine/state_debug_label.gd" id="10_dl1le"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u2lbm"]
 size = Vector2(26, 56)
@@ -717,9 +718,6 @@ _data = {
 "walk_right_item_equipped": SubResource("Animation_aseon")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_h2uuc"]
-animation = &"death"
-
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_exg1q"]
 animation = &"walk_right"
 
@@ -748,33 +746,20 @@ blend_point_4/node = SubResource("AnimationNodeAnimation_34t65")
 blend_point_4/pos = Vector2(0, 0)
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_g4oyw"]
-animation = &"take_damage"
-
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_np56i"]
 advance_mode = 2
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_qa510"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_18teu"]
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_jvbuh"]
-advance_mode = 2
-
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_rkhhf"]
-states/death/node = SubResource("AnimationNodeAnimation_h2uuc")
-states/death/position = Vector2(373, 190.054)
 states/move/node = SubResource("AnimationNodeBlendSpace2D_jisbj")
 states/move/position = Vector2(373, 100)
-states/take_damage/node = SubResource("AnimationNodeAnimation_g4oyw")
-states/take_damage/position = Vector2(373, -5)
-transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition_np56i"), "move", "take_damage", SubResource("AnimationNodeStateMachineTransition_qa510"), "take_damage", "move", SubResource("AnimationNodeStateMachineTransition_18teu"), "move", "death", SubResource("AnimationNodeStateMachineTransition_jvbuh")]
-graph_offset = Vector2(0, -71.9459)
+transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition_np56i")]
+graph_offset = Vector2(0, -83.0378)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_mx6mj")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("2_0b5fo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -30)
