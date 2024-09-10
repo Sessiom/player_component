@@ -44,8 +44,10 @@ func update_facing_direction():
 
 
 func _on_health_health_changed(diff):
+	#TODO figure out how to advance animation tree
 	animation_player.play("take_damage")
 	
 
 func _on_health_health_depleted():
+	#TODO figure out how to advance animation tree
 	animation_player.play("death")
