@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cd2ipxqmu254i"]
+[gd_scene load_steps=42 format=3 uid="uid://cd2ipxqmu254i"]
 
 [ext_resource type="Texture2D" uid="uid://dlw56h4q3trtn" path="res://assets/player/rectangle_player.png" id="1_4jvbj"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_mx6mj"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/playerStateMachine/idleState.gd" id="5_7qxxg"]
 [ext_resource type="Texture2D" uid="uid://bka55qrimdl12" path="res://assets/player/rectangle_player_dead.png" id="5_tkus4"]
 [ext_resource type="Script" path="res://scripts/playerStateMachine/walkState.gd" id="6_87gbl"]
+[ext_resource type="PackedScene" uid="uid://dlvmkdiavygwd" path="res://scenes/sword.tscn" id="6_dck8q"]
 [ext_resource type="Script" path="res://scripts/playerStateMachine/takesDamageState.gd" id="7_dj077"]
 [ext_resource type="Script" path="res://scripts/playerStateMachine/dealsDamageState.gd" id="8_x26bq"]
 [ext_resource type="Script" path="res://scripts/playerStateMachine/deathState.gd" id="9_n6fb0"]
@@ -18,6 +19,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u2lbm"]
 size = Vector2(26, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jux0s"]
+size = Vector2(26, 57)
 
 [sub_resource type="Animation" id="Animation_xvuof"]
 length = 0.001
@@ -717,6 +721,9 @@ _data = {
 "walk_right_item_equipped": SubResource("Animation_aseon")
 }
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_abbhy"]
+animation = &"death"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_exg1q"]
 animation = &"walk_right"
 
@@ -745,17 +752,29 @@ blend_point_4/node = SubResource("AnimationNodeAnimation_34t65")
 blend_point_4/pos = Vector2(0, 0)
 blend_mode = 1
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_4srsx"]
+animation = &"take_damage"
+
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_np56i"]
 advance_mode = 2
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_40mwo"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bbnu3"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bxpud"]
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_rkhhf"]
+states/death/node = SubResource("AnimationNodeAnimation_abbhy")
+states/death/position = Vector2(373, 172.962)
 states/move/node = SubResource("AnimationNodeBlendSpace2D_jisbj")
 states/move/position = Vector2(373, 100)
-transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition_np56i")]
+states/take_damage/node = SubResource("AnimationNodeAnimation_4srsx")
+states/take_damage/position = Vector2(373, 10.9622)
+transitions = ["Start", "move", SubResource("AnimationNodeStateMachineTransition_np56i"), "move", "take_damage", SubResource("AnimationNodeStateMachineTransition_40mwo"), "take_damage", "move", SubResource("AnimationNodeStateMachineTransition_bbnu3"), "move", "death", SubResource("AnimationNodeStateMachineTransition_bxpud")]
 graph_offset = Vector2(0, -83.0378)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_jux0s"]
-size = Vector2(26, 57)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_mx6mj")
@@ -766,6 +785,16 @@ script = ExtResource("2_0b5fo")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_u2lbm")
+
+[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health")]
+collision_layer = 0
+script = ExtResource("14_nfvjc")
+health = NodePath("../Health")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -29.5)
+shape = SubResource("RectangleShape2D_jux0s")
+debug_color = Color(0.88939, 0.308858, 0.284008, 0.42)
 
 [node name="body" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -778,11 +807,17 @@ position = Vector2(25, -16)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_amdur")
 
+[node name="swordPivot" type="Marker2D" parent="arm_right"]
+
+[node name="sword" parent="arm_right/swordPivot" instance=ExtResource("6_dck8q")]
+
 [node name="arm_left" type="Sprite2D" parent="."]
 texture_filter = 1
 position = Vector2(-25, -16)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_amdur")
+
+[node name="gunPivot" type="Marker2D" parent="arm_left"]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -840,16 +875,6 @@ offset_bottom = -63.0
 text = "State:"
 script = ExtResource("10_dl1le")
 state_machine = NodePath("../playerStateMachine")
-
-[node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health")]
-collision_layer = 0
-script = ExtResource("14_nfvjc")
-health = NodePath("../Health")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(0, -29.5)
-shape = SubResource("RectangleShape2D_jux0s")
-debug_color = Color(0.88939, 0.308858, 0.284008, 0.42)
 
 [node name="healthDebugLabel" type="Label" parent="." node_paths=PackedStringArray("health")]
 offset_left = -53.0

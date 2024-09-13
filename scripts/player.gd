@@ -6,13 +6,15 @@ extends CharacterBody2D
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var sprite : Sprite2D = $body
 @onready var state_machine : playerStateMachine = $playerStateMachine
+@onready var sword = $arm_right/swordPivot/sword
 
 var direction : Vector2 = Vector2.ZERO
-
+var playback : AnimationNodeStateMachinePlayback
 
 
 func _ready():
 	animation_tree.active = true
+	playback = animation_tree["parameters/playback"]
 
 func _physics_process(delta):
 	
@@ -27,6 +29,11 @@ func _physics_process(delta):
 		velocity = Vector2.ZERO
 		#velocity.x = move_toward(velocity.x, 0, speed)
 		#velocity.y = move_toward(velocity.y, 0, speed)
+		
+	#attack input
+	if Input.is_action_just_pressed("attack"):
+		sword.swing()
+		
 		
 	
 	update_animation_parameters()
@@ -44,10 +51,7 @@ func update_facing_direction():
 
 
 func _on_health_health_changed(diff):
-	#TODO figure out how to advance animation tree
-	animation_player.play("take_damage")
-	
+	playback.travel("take_damage")
 
 func _on_health_health_depleted():
-	#TODO figure out how to advance animation tree
-	animation_player.play("death")
+	playback.travel("death")

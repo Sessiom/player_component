@@ -9,3 +9,13 @@ class_name takesDamage
 
 func state_input(event : InputEvent):
 	pass
+
+func state_process(delta):
+	if(playback.get_current_node() != "take_damage"):
+		if(player.velocity == Vector2.ZERO):
+			next_state = idle_state
+		else:
+			next_state = walk_state
+	
+func on_exit():
+	pass

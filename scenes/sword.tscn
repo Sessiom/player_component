@@ -1,0 +1,100 @@
+[gd_scene load_steps=8 format=3 uid="uid://dlvmkdiavygwd"]
+
+[ext_resource type="Script" path="res://scripts/sword.gd" id="1_2pe2v"]
+[ext_resource type="Texture2D" uid="uid://cgedq0ljh2hra" path="res://assets/medieval_weapons/Iicon_32_03.png" id="1_8lxm8"]
+[ext_resource type="Script" path="res://scripts/components/hitbox.gd" id="2_ca5uv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jwilv"]
+size = Vector2(4.24264, 36.8826)
+
+[sub_resource type="Animation" id="Animation_l3nri"]
+resource_name = "swing"
+length = 0.23
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("swing_pivot:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-0.698132, 1.22173]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("swing_pivot/Sprite2D/Hitbox/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_6hk3b"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("swing_pivot:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.698132]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("swing_pivot/Sprite2D/Hitbox/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5oego"]
+_data = {
+"RESET": SubResource("Animation_6hk3b"),
+"swing": SubResource("Animation_l3nri")
+}
+
+[node name="sword" type="Node2D"]
+script = ExtResource("1_2pe2v")
+
+[node name="swing_pivot" type="Marker2D" parent="."]
+rotation = -0.698132
+
+[node name="Sprite2D" type="Sprite2D" parent="swing_pivot"]
+texture_filter = 1
+position = Vector2(22, -22)
+scale = Vector2(2, 2)
+texture = ExtResource("1_8lxm8")
+
+[node name="Hitbox" type="Area2D" parent="swing_pivot/Sprite2D"]
+position = Vector2(-11, 11)
+scale = Vector2(0.5, 0.5)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_ca5uv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="swing_pivot/Sprite2D/Hitbox"]
+position = Vector2(25.92, -25.92)
+rotation = 0.785398
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_jwilv")
+disabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_5oego")
+}
