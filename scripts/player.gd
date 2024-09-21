@@ -6,7 +6,7 @@ extends CharacterBody2D
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var sprite : Sprite2D = $body
 @onready var state_machine : playerStateMachine = $playerStateMachine
-@onready var sword = $arm_right/swordPivot/sword
+
 
 var direction : Vector2 = Vector2.ZERO
 var playback : AnimationNodeStateMachinePlayback
@@ -32,7 +32,7 @@ func _physics_process(delta):
 		
 	#attack input
 	if Input.is_action_just_pressed("attack"):
-		sword.swing()
+		$weapon/blaster.shoot()
 		
 		
 	

@@ -779,18 +779,17 @@ graph_offset = Vector2(0, -83.0378)
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_mx6mj")
 
-[node name="weapon" type="Node2D" parent="."]
-
-[node name="blaster" parent="weapon" instance=ExtResource("16_oee8c")]
-z_index = 1
-position = Vector2(0, -19)
-
 [node name="Health" type="Node" parent="."]
 script = ExtResource("2_0b5fo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_u2lbm")
+
+[node name="weaponPivot" type="Node2D" parent="."]
+
+[node name="blaster" parent="weaponPivot" instance=ExtResource("16_oee8c")]
+position = Vector2(0, -23)
 
 [node name="Hurtbox" type="Area2D" parent="." node_paths=PackedStringArray("health")]
 collision_layer = 0
@@ -870,7 +869,6 @@ death_state = NodePath("../Death")
 script = ExtResource("9_n6fb0")
 
 [node name="stateDebugLabel" type="Label" parent="." node_paths=PackedStringArray("state_machine")]
-visible = false
 offset_left = -49.0
 offset_top = -86.0
 offset_right = 105.0
@@ -880,7 +878,6 @@ script = ExtResource("10_dl1le")
 state_machine = NodePath("../playerStateMachine")
 
 [node name="healthDebugLabel" type="Label" parent="." node_paths=PackedStringArray("health")]
-visible = false
 offset_left = -53.0
 offset_top = -1.0
 offset_right = 81.0
@@ -890,7 +887,7 @@ script = ExtResource("15_bfrda")
 health = NodePath("../Health")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(2, 2)
+zoom = Vector2(3, 3)
 
 [connection signal="health_changed" from="Health" to="." method="_on_health_health_changed"]
 [connection signal="health_depleted" from="Health" to="." method="_on_health_health_depleted"]

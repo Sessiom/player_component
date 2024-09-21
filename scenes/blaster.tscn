@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cps4rmvth7g1q"]
+
+[ext_resource type="Script" path="res://scripts/blaster.gd" id="1_5tm1v"]
+[ext_resource type="Texture2D" uid="uid://cjigfdbgm5g1k" path="res://assets/guns_pixel_art/Pistol-4.png" id="1_kul1q"]
+
+[node name="blaster" type="Node2D"]
+script = ExtResource("1_5tm1v")
+
+[node name="pivot" type="Marker2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="pivot"]
+texture_filter = 1
+position = Vector2(41, 0)
+texture = ExtResource("1_kul1q")
+
+[node name="projectile_origin" type="Marker2D" parent="pivot/Sprite2D"]
+unique_name_in_owner = true
+position = Vector2(12, -5)

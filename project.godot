@@ -45,8 +45,9 @@ attack={
 
 [layer_names]
 
-2d_physics/layer_1="enemy_damage"
+2d_physics/layer_1="enemy_ground_damage"
 2d_physics/layer_2="player_damage"
+2d_physics/layer_3="enemy_flying_damage"
 
 [rendering]
 
