@@ -148,6 +148,7 @@ shape = SubResource("RectangleShape2D_f2gd7")
 debug_color = Color(0.942816, 0.207681, 0.313411, 0.42)
 
 [node name="healthDebugLabel" type="Label" parent="." node_paths=PackedStringArray("health")]
+visible = false
 offset_left = -53.0
 offset_top = -1.0
 offset_right = 81.0

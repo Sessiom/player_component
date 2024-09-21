@@ -1,16 +1,19 @@
 extends CharacterBody2D
 
 @export var speed : float = 200.0
+@export var weapon_select : int = 0 : set = set_weapon, get = get_weapon
 
 @onready var animation_player : AnimationPlayer = $AnimationPlayer
 @onready var animation_tree : AnimationTree = $AnimationTree
 @onready var sprite : Sprite2D = $body
 @onready var state_machine : playerStateMachine = $playerStateMachine
+@onready var weapon : Node2D = $weapon
 
 
+var is_weapon_equipped : bool = false
+var prev_weapon : int = -1
 var direction : Vector2 = Vector2.ZERO
 var playback : AnimationNodeStateMachinePlayback
-
 
 func _ready():
 	animation_tree.active = true
@@ -29,11 +32,30 @@ func _physics_process(delta):
 		velocity = Vector2.ZERO
 		#velocity.x = move_toward(velocity.x, 0, speed)
 		#velocity.y = move_toward(velocity.y, 0, speed)
+	
+	#weapon_select
+	if Input.is_action_just_pressed("weapon_slot_0"):
+		is_weapon_equipped = false
+		playback.travel("move")
+		change_weapon(0)
+		print("hands")
+	if Input.is_action_just_pressed("weapon_slot_1"):
+		is_weapon_equipped = true
+		playback.travel("move_item_equipped")
+		change_weapon(1)
+		print("sword")
+	if Input.is_action_just_pressed("weapon_slot_2"):
+		is_weapon_equipped = true
+		playback.travel("move_item_equipped")
+		change_weapon(2)
+		print("blaster")
 		
 	#attack input
 	if Input.is_action_just_pressed("attack"):
-		$weapon/blaster.shoot()
-		
+		if weapon.get_child(weapon_select).has_method("swing"):
+			$weapon/sword.swing()
+		elif weapon.get_child(weapon_select).has_method("shoot"):
+			$weapon/blaster.shoot()
 		
 	
 	update_animation_parameters()
@@ -41,7 +63,10 @@ func _physics_process(delta):
 	move_and_slide()
 	
 func update_animation_parameters():
-	animation_tree.set("parameters/move/blend_position", direction)
+	if is_weapon_equipped:
+		animation_tree.set("parameters/move_item_equipped/blend_position", direction)
+	else:
+		animation_tree.set("parameters/move/blend_position", direction)
 
 func update_facing_direction():
 	if direction.x > 0:
@@ -51,7 +76,31 @@ func update_facing_direction():
 
 
 func _on_health_health_changed(diff):
-	playback.travel("take_damage")
+	if is_weapon_equipped:
+		playback.travel("take_damage_item_equipped")
+	else:
+		playback.travel("take_damage")
 
 func _on_health_health_depleted():
-	playback.travel("death")
+	if is_weapon_equipped:
+		playback.travel("death_2")
+	else:
+		playback.travel("death")
+	
+func set_weapon(value: int):
+	weapon_select = value
+	
+func get_weapon():
+	return weapon_select
+	
+func change_weapon(value: int):
+			prev_weapon = weapon_select
+			weapon.get_child(weapon_select).set_visible(false)
+			weapon.get_child(weapon_select).set_physics_process(false)
+			set_weapon(value)
+			#setting global_rotation to fix weapon flickering (offset of -20 for weapon pivot)
+			var direction = (get_global_mouse_position() - global_position) - Vector2(0,-20)
+			weapon.get_child(weapon_select).global_rotation = direction.angle()
+			print(direction.angle())
+			weapon.get_child(weapon_select).set_visible(true)
+			weapon.get_child(weapon_select).set_physics_process(true)

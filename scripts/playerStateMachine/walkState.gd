@@ -16,5 +16,6 @@ func state_process(delta):
 		next_state = idle_state
 	if(playback.get_current_node() == "take_damage"):
 		next_state = takes_damage_state
-	if(playback.get_current_node() == "death"):
+	if(playback.get_current_node() == "death" or 
+	   playback.get_current_node() =="death_2"):
 		next_state = death_state
