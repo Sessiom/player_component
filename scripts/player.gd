@@ -49,6 +49,32 @@ func _physics_process(delta):
 		playback.travel("move_item_equipped")
 		change_weapon(2)
 		print("blaster")
+	
+	if Input.is_action_just_pressed("scroll_up"):
+		weapon_select += 1
+		if weapon_select > 2:
+			weapon_select = 1
+		if weapon_select == 0:
+			is_weapon_equipped = false
+			playback.travel("move")
+			change_weapon(weapon_select)
+		else:
+			is_weapon_equipped = true
+			playback.travel("move_item_equipped")
+			change_weapon(weapon_select)
+			
+	if Input.is_action_just_pressed("scroll_down"):
+		weapon_select -= 1
+		if weapon_select < 1:
+			weapon_select = 2
+		if weapon_select == 0:
+			is_weapon_equipped = false
+			playback.travel("move")
+			change_weapon(weapon_select)
+		else:
+			is_weapon_equipped = true
+			playback.travel("move_item_equipped")
+			change_weapon(weapon_select)
 		
 	#attack input
 	if Input.is_action_just_pressed("attack"):
@@ -94,13 +120,12 @@ func get_weapon():
 	return weapon_select
 	
 func change_weapon(value: int):
-			prev_weapon = weapon_select
-			weapon.get_child(weapon_select).set_visible(false)
-			weapon.get_child(weapon_select).set_physics_process(false)
+			weapon.get_child(prev_weapon).set_visible(false)
+			weapon.get_child(prev_weapon).set_physics_process(false)
 			set_weapon(value)
 			#setting global_rotation to fix weapon flickering (offset of -20 for weapon pivot)
 			var direction = (get_global_mouse_position() - global_position) - Vector2(0,-20)
 			weapon.get_child(weapon_select).global_rotation = direction.angle()
-			print(direction.angle())
 			weapon.get_child(weapon_select).set_visible(true)
 			weapon.get_child(weapon_select).set_physics_process(true)
+			prev_weapon = weapon_select
